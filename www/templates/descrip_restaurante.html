@@ -1,0 +1,65 @@
+<ion-nav-view class="padding">
+    <ion-header-bar class="bar bar-header blue-grey darken-2">
+        <h1 class="title white-text">Administrador</h1>
+    </ion-header-bar>
+    <ion-tabs class="tabs-icon-top tabs-top blue-grey darken-2">
+        <ion-tab title="Resevas pendientes" icon-on="ion-ios-paper" icon-off="ion-ios-paper-outline">
+            <br>
+            <ion-content>
+                <div class="list">
+                    <ion-list>
+                        <div ng-repeat="reserva in reservas">
+                            <a class="item item-thumbnail-left">
+                                <p>{{reserva.nombre}}</p>
+                                <p>{{reserva.observacion}}</p>
+                            </a>
+                        </div>
+                    </ion-list>
+                </div>
+            </ion-content>
+        </ion-tab>
+        <ion-tab title="La carta" icon-on="ion-ios-list" icon-off="ion-ios-list-outline">
+            <br>
+            <ion-content>
+                <div class="padding" ng-init="listarMenu();">
+                    <div class="item item-button-right">
+                        Si tines nuevos platos para mostrar a tus clientes da click en el boton --->
+                        <a class="button button-icon icon ion-plus-circled calm" ng-click="modal.show();"></a>
+                        <br>
+                    </div>
+                    <br>
+                    <div class="item item-button-right">
+                        Da click en el siguiente boton para eliminar un plato.
+                        <button class="button button-icon icon ion-minus-circled assertive" ng-click="data.showDelete = !data.showDelete; data.showReorder = false"></button>
+                    </div>
+                    <br>
+                    <div class="item item-button-right">
+                        Da click en el siguiente boton para editar un plato.
+                        <button class="button button-icon icon ion-android-list energized" ng-click="data.showDelete = false; data.showReorder = !data.showReorder">
+                        </button>
+                    </div>
+                    <br>
+                    <div class="list">
+                        <ion-list show-delete="data.showDelete" show-reorder="data.showReorder">
+                            <ion-item ng-repeat="group in groups" class="item-stable" ng-click="toggleGroup(group)" ng-class="{active: isGroupShown(group)}">
+                                <strong>{{group.nombre}}</strong>
+                                <br>
+                                <ion-item ng-repeat="plato in group.lista" item="plato" class="item-remove-animate">
+                                    <a class="item item-thumbnail-left">
+                                        <img id="myImage" src='{{plato.urlimg}}'>
+                                        <span class="item-note colora">${{plato.precio}}</span>
+                                        <b>{{plato.nombre_plato}}</b>
+                                        <p>{{plato.caracteristica}}</p>
+                                    </a>
+                                    <ion-delete-button class="ion-minus-circled" ng-click="onItemDelete(plato)"></ion-delete-button>
+                                    <ion-reorder-button class="button-icon icon ion-android-list energized" ng-click="modal2.show();"></ion-reorder-button>
+                                </ion-item>
+                            </ion-item>
+                            <br>
+                        </ion-list>
+                    </div>
+                </div>
+            </ion-content>
+        </ion-tab>
+    </ion-tabs>
+</ion-nav-view>

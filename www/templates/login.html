@@ -1,0 +1,17 @@
+<ion-header-bar class="bar bar-header bar-energized">
+    <h1 class="title white-text">Login</h1>
+</ion-header-bar>
+<br>
+<ion-content class="center-align">
+    <div class="container">
+        <img class="responsive-img" src="img/logo_arriba.png">
+        <div class="list list-inset">
+            <input ng-model="restaurante.correo" placeholder="Email" id="email" type="email" class="validate">
+            <input ng-model="restaurante.contrasena" placeholder="Contraseña" id="password" type="password" class="validate">
+            <button ng-disabled="!restaurante.correo || !restaurante.contrasena" ng-click="login()" class="button button-small waves-effect waves-light waves-block btn blue-grey darken-2 white-text">
+                INICIAR SESION
+            </button>
+        </div>
+        <a class="tamanoletra" menu-toggle="left" href="#/app/recup_contrasena">Olvidaste tu contraseña</a>
+    </div>
+</ion-content>

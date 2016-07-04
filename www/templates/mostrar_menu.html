@@ -1,0 +1,29 @@
+<ion-modal-view class="padding" ng-init="listarMenu();">
+    <ion-header-bar class="bar bar-header blue-grey darken-2">
+        <h1 class="title white-text">Datos del plato</h1>
+    </ion-header-bar>
+    <ion-content>
+        <ion-list>
+            <ion-item class="item-stable" ng-click="toggleGroup(group)" ng-class="{active: isGroupShown(group)}">
+                <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>&nbsp; selecciona la Categoria del plato
+            </ion-item>
+            <ion-item class="item-accordion" ng-repeat="categoria in categorias" ng-show="isGroupShown(group)">
+                <ion-radio ng-model="choice" ng-value="'{{categoria.nombre}}'">{{categoria.nombre}}</ion-radio>
+            </ion-item>
+        </ion-list>
+        <label class="item item-input">
+            <input ng-model="platoNuevo.nombre_plato" type="text" placeholder="Nombre">
+        </label>
+        <label class="item item-input">
+            <input ng-model="platoNuevo.precio" type="text" placeholder="Precio">
+        </label>
+        <label class="item item-input">
+            <textarea ng-model="platoNuevo.caracteristica" placeholder="Caracteeristicas"></textarea>
+        </label>
+        <div class="posicionbotontabañadirplato">
+            <button ng-click="agregarplatonuevo()" class="button button-small button-block button-positive">
+                <i class="icon ion-gear-a"></i> Añadir plato nuevo
+            </button>
+        </div>
+    </ion-content>
+</ion-modal-view>

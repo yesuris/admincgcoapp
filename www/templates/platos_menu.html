@@ -1,0 +1,41 @@
+<ion-modal-view class="padding">
+  <ion-header-bar class="bar bar-header blue-grey darken-2">
+    <h1 class="title white-text">La carta</h1>
+    <button class="button button-clear button-primary white-text" ng-click="modal.hide()">Listo</button>
+  </ion-header-bar>
+
+  <ion-content>
+    <div class="list">
+
+      <ion-list>
+        <div ng-repeat="group in groups">
+          
+          <ion-item class="item-stable"
+                    ng-click="toggleGroup(group)"
+                    ng-class="{active: isGroupShown(group)}" >
+              
+            {{group.nombre}}
+<!--              ng-model="checkpopup.activo" ng-change="showPopup()"-->
+<!--              ng-change="agregarPlato(plato); showPopup(platosBooleanos[$parent.$index][$index])"-->
+            <div ng-repeat="plato in group.lista">
+              <ion-checkbox id="check{{$parent.$index}}{{$index}}" ng-model="platosBooleanos[$parent.$index][$index]" ng-change="showPopup($parent.$index, $index, plato);">
+                <a class="item item-thumbnail-left">
+                  <img id="myImage" src='{{plato.urlimg}}'>
+                  <span class="item-note colora">${{plato.precio}}</span>
+                  <br>
+                  <b>{{plato.nombre_plato}}</b>
+                  <p>{{plato.caracteristica}}</p>
+                </a>
+              </ion-checkbox>
+            </div>
+
+          </ion-item>
+        </div>
+      </ion-list>
+        
+    </div>
+
+
+  </ion-content>
+</ion-modal-view>
+

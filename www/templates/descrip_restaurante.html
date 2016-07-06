@@ -24,7 +24,7 @@
                 <div class="padding" ng-init="listarMenu();">
                     <div class="item item-button-right">
                         Si tines nuevos platos para mostrar a tus clientes da click en el boton --->
-                        <a class="button button-icon icon ion-plus-circled calm" ng-click="modal.show();"></a>
+                        <a class="button button-icon icon ion-plus-circled calm" ng-click="modal1.show();"></a>
                         <br>
                     </div>
                     <br>
@@ -52,7 +52,7 @@
                                         <p>{{plato.caracteristica}}</p>
                                     </a>
                                     <ion-delete-button class="ion-minus-circled" ng-click="onItemDelete(plato)"></ion-delete-button>
-                                    <ion-reorder-button class="button-icon icon ion-android-list energized" ng-click="modal2.show();"></ion-reorder-button>
+                                    <ion-reorder-button class="button-icon icon ion-android-list energized" ng-click="modal2.show();edit(plato);"></ion-reorder-button>
                                 </ion-item>
                             </ion-item>
                             <br>

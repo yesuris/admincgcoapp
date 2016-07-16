@@ -1,17 +1,35 @@
-<ion-modal-view class="padding">
+<ion-modal-view>
     <ion-header-bar class="bar bar-header blue-grey darken-2">
         <h1 class="title white-text">Editar datos del palto</h1>
         <button class="button button-clear button-primary white-text" ng-click="modal2.hide()">Listo</button>
     </ion-header-bar>
-    <ion-content>
-        
-        <label class="item item-input">
-            <input ng-model="platoEditado.nombre_plato" type="text" placeholder="Nombre">
-        </label>
-        <div class="posicionbotontabañadirplato">
-            <button ng-click="editdelmodal();" class="button button-small button-block button-positive">
-                <i class="icon ion-gear-a"></i> Añadir plato nuevo
-            </button>
+    <ion-content>      
+        <div class="container" data-ng-controller="HomeCtrlEdit">
+            <form name="upload" ng-submit="uploadFileEdit()">
+                <br/>
+                <label class="item item-input">
+                    <input type="file" name="file" uploader-model="file">
+                </label>
+                <br/>
+                <input ng-model="platoEditado.nombre_plato" type="text" placeholder="Nombre">
+                <br/>
+                <input ng-model="platoEditado.precio" type="text" placeholder="Precio">
+                <br/>
+                <input ng-model="platoEditado.caracteristica" type="text" placeholder="Caracteristicas">
+                <br/>
+                Seleccione la categoria
+                <ion-list>
+                    <ion-item ng-repeat="categoria in categorias" >
+                        <ion-radio ng-model="platoEditado.id_categoria" value="{{categoria.id}}">{{categoria.nombre}}</ion-radio>
+                    </ion-item>
+                </ion-list>
+                <br/>
+                <div class="posicionbotontabañadirplato">
+                <button type="submit"  class="button button-small button-block button-positive">
+                    <i class="icon ion-gear-a"></i> Añadir plato nuevo
+                </button>
+            </div>
+            </form>
         </div>
     </ion-content>
 </ion-modal-view>

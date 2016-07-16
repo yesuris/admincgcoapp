@@ -1,5 +1,76 @@
 angular.module('ciudadgourmetco.controllers', [])
-    .controller('LoginCtrl', function ($scope, $http) {
+
+.controller('HomeCtrl', ['$scope', 'upload', '$http', '$ionicPopup', function ($scope, upload, $http, $ionicPopup) {
+    $scope.platoNuevo = { //ng-model en los input
+        id_restaurante: localStorage.id_restaurante,
+        nombre_plato: "",
+        caracteristica: "",
+        precio: 0,
+        id_categoria: "",
+        urlimg: ""
+    };
+    $scope.uploadFile = function () {
+        var name = $scope.name;
+        var file = $scope.file;
+
+        upload.uploadFile(file, name).then(function (res) {
+            console.log(res);
+            $scope.platoNuevo.urlimg = file.name;
+
+            $http({
+                method: "POST",
+                url: "http://www.ciudadgourmet.co/api-ncg/nuevoPlato",
+                data: $scope.platoNuevo,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }).then(function mySucces(response) {
+                var respuesta = response.data;
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Genial!',
+                    template: 'Tu nuevo plato fue agregado'
+                });
+            }, function myError(response) {
+                alert("Eror en el servidor, intente nuevamente.");
+            })
+        })
+    }
+}])
+
+.controller('HomeCtrlEdit', ['$scope', 'upload', '$http', '$ionicPopup', function ($scope, upload, $http, $ionicPopup) {
+    $scope.platoEditado = { //ng-model en los input
+        urlimg: "",
+        nombre_plato: "",
+        caracteristica: "",
+        precio: 0,
+        id_categoria: ""
+    };
+    $scope.uploadFileEdit = function () {
+        var name = $scope.name;
+        var file = $scope.file;
+
+        upload.uploadFile(file, name).then(function (res) {
+            console.log(res);
+            $scope.platoEditado.urlimg = file.name;
+
+            var id = localStorage.iddelplato;
+            $http({
+                method: "PUT",
+                url: "http://www.ciudadgourmet.co/api-ncg/actualizar/" + id,
+                data: $scope.platoEditado,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            }).then(function mySucces(response) {
+                alert("el plato se ha modificado");
+            }, function myError(response) {
+                alert("Eror en el servidor, intente nuevamente.");
+            });
+        })
+    }
+}])
+
+.controller('LoginCtrl', function ($scope, $http) {
         localStorage.centinela = "false";
         $scope.restaurante = {
             correo: "",
@@ -44,7 +115,8 @@ angular.module('ciudadgourmetco.controllers', [])
             }
         }
     })
-    .controller('Descrip_restauranteCtrl', function ($scope, $http, $ionicModal, $ionicPopup) {
+    .controller('Descrip_restauranteCtrl', function ($scope, $http, $ionicModal, $ionicPopup, upload) {
+
         console.log("Descrip_restauranteCtrl");
         $scope.reservas = [];
         var id_restaurante = 1; //fijo por ahora
@@ -58,26 +130,26 @@ angular.module('ciudadgourmetco.controllers', [])
             alert("Eror en el servidor, intente nuevamente.");
         });
 
-        $ionicModal.fromTemplateUrl('templates/mostrar_menu.html', {
+        $ionicModal.fromTemplateUrl('templates/nuevo_plato.html', {
             scope: $scope,
             animation: 'slide-in-up'
         }).then(function (modal) {
             $scope.modal1 = modal;
         });
-    
+
         $ionicModal.fromTemplateUrl('templates/editar_menu.html', {
             scope: $scope,
             animation: 'slide-left-right'
-        }).then(function(modal) {
+        }).then(function (modal) {
             $scope.modal2 = modal;
         });
-    
-        $scope.openModal = function(index) {
+
+        $scope.openModal = function (index) {
             if (index == 1) $scope.modal1.show();
             else $scope.modal2.show();
         };
 
-        $scope.closeModal = function(index) {
+        $scope.closeModal = function (index) {
             if (index == 1) $scope.modal1.hide();
             else $scope.modal2.hide();
         };
@@ -92,7 +164,17 @@ angular.module('ciudadgourmetco.controllers', [])
                 alert("Eror en el servidor, intente nuevamente.");
             });
         };
-        
+
+        $scope.categorias = [];
+        $http({
+            method: "GET",
+            url: "http://www.ciudadgourmet.co/api-ncg/categorias"
+        }).then(function mySucces(response) {
+            var respuesta = response.data;
+            $scope.categorias = respuesta.result;
+        }, function myError(response) {
+            alert("Eror en el servidor, intente nuevamente.");
+        });
         $scope.toggleGroup = function (group) {
             if ($scope.isGroupShown(group)) {
                 $scope.shownGroup = null;
@@ -103,31 +185,8 @@ angular.module('ciudadgourmetco.controllers', [])
         $scope.isGroupShown = function (group) {
             return $scope.shownGroup === group;
         };
-        $scope.platoNuevo = { //ng-model en los input
-            id_restaurante: localStorage.id_restaurante,
-            nombre_plato: "",
-            caracteristica: "",
-            precio: 0,
-            id_categoria: 1
-        };
-        $scope.agregarplatonuevo = function () {
-            $http({
-                method: "POST",
-                url: "http://www.ciudadgourmet.co/api-ncg/nuevoPlato",
-                data: $scope.platoNuevo,
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                }
-            }).then(function mySucces(response) {
-                var respuesta = response.data;
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Genial!',
-                    template: 'Tu nuevo plato fue agregado'
-                });
-            }, function myError(response) {
-                alert("Eror en el servidor, intente nuevamente.");
-            })
-        };
+
+
         $scope.data = {
             showDelete: false
         };
@@ -142,19 +201,18 @@ angular.module('ciudadgourmetco.controllers', [])
                 alert("Eror en el servidor, intente nuevamente.");
             });
         };
-    
+
         $scope.edit = function (item) {
-            alert('Edit Item:' + item.id);
-            $scope.iddelplato = item.id;
+            localStorage.iddelplato = item.id;
+            
         };
-    
-        $scope.platoEditado = { //ng-model en los input
+
+        /*$scope.platoEditado = { //ng-model en los input
             nombre_plato: ""
         };
-    
-        $scope.editdelmodal = function() {
+
+        $scope.editdelmodal = function () {
             var id = $scope.iddelplato;
-            alert('Editdelmodal Item:' + id);
             $http({
                 method: "PUT",
                 url: "http://www.ciudadgourmet.co/api-ncg/actualizar/" + id,
@@ -167,9 +225,34 @@ angular.module('ciudadgourmetco.controllers', [])
             }, function myError(response) {
                 alert("Eror en el servidor, intente nuevamente.");
             });
-            
-        }
+
+        }*/
     })
     .controller('RegistroCtrl', function ($scope, $ionicPopup) {
 
-    });
+    })
+
+
+
+.service('upload', ["$http", "$q", function ($http, $q)
+    {
+        this.uploadFile = function (file, name) {
+            var deferred = $q.defer();
+            var formData = new FormData();
+            formData.append("name", name);
+            formData.append("file", file);
+            return $http.post("http://www.ciudadgourmet.co/server.php", formData, {
+                    headers: {
+                        "Content-type": undefined
+                    },
+                    transformRequest: angular.identity
+                })
+                .success(function (res) {
+                    deferred.resolve(res);
+                })
+                .error(function (msg, code) {
+                    deferred.reject(msg);
+                })
+            return deferred.promise;
+        }
+}]);
